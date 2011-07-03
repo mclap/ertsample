@@ -9,8 +9,6 @@ getcur() ->
 	C -> C
 	end.
 
-addchain(undefined, Insert) ->
-	put(chains, [Insert]);
 addchain(Chains, Insert) when length(Chains) < ?LIMIT ->
 	put(chains, [Insert | Chains]);
 addchain(Chains, Insert) ->
@@ -34,13 +32,19 @@ emit_internal(V, Current) ->
 		_=put(last, [V])
 	end.
 
+%% @doc emit single value to the keeper
 emit(V) ->
 	emit_internal(V, getcur()),
 	[{last, getcur()}, {all, getall()}].
 
+%% @doc get all values
 getall() ->
-	get(chains).
+	case get(chains) of 
+	undefined -> [];
+	C -> C
+	end.
 
+%% @doc reset the values
 clearall() ->
 	put(chains, undefined),
 	put(last, undefined).

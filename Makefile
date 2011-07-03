@@ -1,4 +1,4 @@
-all: deps compile doc
+all: deps compile
 
 deps:
 	rebar get-deps
@@ -17,3 +17,6 @@ distclean: clean
 
 update:
 	rebar update-deps
+
+start:
+	deps/yaws/bin/yaws -i -c yaws.conf
