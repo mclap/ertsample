@@ -18,5 +18,5 @@ distclean: clean
 update:
 	rebar update-deps
 
-start:
+start: all
 	deps/yaws/bin/yaws -i -c yaws.conf

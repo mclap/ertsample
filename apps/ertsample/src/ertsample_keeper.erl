@@ -36,6 +36,14 @@ emit_internal(V, Current) ->
 	end.
 
 %% @doc emit single value to the keeper
+emit(V) when is_binary(V) ->
+	L = binary_to_list(V),
+	case string:to_integer(L) of
+		{error,no_integer} -> {error, bad_value};
+		{N,""} -> emit(N);
+		{_,_} -> {error, bad_value}
+	end;
+
 emit(V) ->
 	emit_internal(V, getcur()),
 	[{last, getcur()}, {all, getall()}].
