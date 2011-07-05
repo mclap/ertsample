@@ -9,8 +9,11 @@
 %% Application callbacks
 %% ===================================================================
 
-start(_StartType, _StartArgs) ->
-    ertsample_sup:start_link().
+start(_StartType, StartArgs) ->
+	case ertsample_sup:start_link(StartArgs) of
+		{ok, Pid} -> {ok, Pid};
+		Error -> Error
+	end.
 
 stop(_State) ->
     ok.

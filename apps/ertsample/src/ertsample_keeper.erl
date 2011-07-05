@@ -2,7 +2,7 @@
 -behaviour(gen_event).
 
 -export([emit/1, getall/0, clearall/0]).
--export([start_link/0, init/1, handle_event/2, code_change/3]).
+-export([start_link/0, init/1, handle_call/2, code_change/3]).
 -import(ertsample_keeper_chains).
 -define(LIMIT, 2).
 
@@ -53,18 +53,25 @@ clearall() ->
 	put(last, undefined).
 
 start_link() ->
-	gen_server:start_link({local, ertsample_keeper}, ertsample_keeper, [], []).
+    io:format("start_link:~p~n", [?MODULE]),
+	case gen_event:start_link({local, ertsample_keeper}) of
+		{ok, Pid} ->
+			gen_event:add_handler(ertsample_keeper, ertsample_keeper, []),
+			{ok, Pid};
+		Error -> Error
+	end.
 
 init(_Args) ->
+    io:format("init:~p~n", [?MODULE]),
 	{ok, none}.
 
-handle_event({emit, Value}, _From) ->
-	{ok, emit(Value)};
+handle_call({emit, Value}, State) ->
+	{ok, emit(Value), State};
 
-handle_event({getall}, _From) ->
-	{ok, getall()};
+handle_call(getall, State) ->
+	{ok, getall(), State};
 
-handle_event({clearall}, _From) ->
+handle_call({clearall}, _From) ->
 	{ok, clearall()}.
 
 code_change(_OldVsn, _State, _Extra) ->
