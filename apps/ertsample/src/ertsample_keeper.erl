@@ -53,7 +53,6 @@ clearall() ->
 	put(last, undefined).
 
 start_link() ->
-    io:format("start_link:~p~n", [?MODULE]),
 	case gen_event:start_link({local, ertsample_keeper}) of
 		{ok, Pid} ->
 			gen_event:add_handler(ertsample_keeper, ertsample_keeper, []),
@@ -62,7 +61,6 @@ start_link() ->
 	end.
 
 init(_Args) ->
-    io:format("init:~p~n", [?MODULE]),
 	{ok, none}.
 
 handle_call({emit, Value}, State) ->
@@ -71,7 +69,7 @@ handle_call({emit, Value}, State) ->
 handle_call(getall, State) ->
 	{ok, getall(), State};
 
-handle_call({clearall}, _From) ->
+handle_call(clearall, _From) ->
 	{ok, clearall()}.
 
 code_change(_OldVsn, _State, _Extra) ->

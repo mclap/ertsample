@@ -2,7 +2,7 @@
 -author('pavel.plesov@gmail.com').
 -export([out/1, out/2]).
 -import(lists).
--import(ertsample_keeper).
+-import(ertsample).
 
 -include("../../../deps/yaws/include/yaws_api.hrl").
 
@@ -10,14 +10,17 @@ box(Str) ->
     {'div',[{class,"box"}],
      {pre,[],Str}}.
 
+%% @doc Entry point for get method
 out(_A, "get") ->
-	Chains=ertsample_keeper:getall(),
+	Chains=ertsample:getall(),
+	% convert internal structure to fit json2 serializarion requirements
 	JSONChains=lists:map(fun(S) -> {array, element(2,S)} end, Chains),
 	io:format("Chains=~p~n", [JSONChains]),
         [{status, 200},
 	{content, "application/json",
 		json2:encode({array, JSONChains})}];
 
+% generic handler
 out(A, _Path) ->
     {ehtml,
      [{p,[],
@@ -30,6 +33,7 @@ out(A, _Path) ->
                           A#arg.querydata,
 			  _Path]))}]}.
 
+%% @doc Entry point for http requrests
 out(Arg) ->
 	% Uri = yaws_api:request_url(Arg),
 	out(Arg, Arg#arg.appmoddata).
