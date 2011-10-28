@@ -1,22 +1,22 @@
 all: deps compile
 
 deps:
-	rebar get-deps
+	./rebar get-deps
 
 compile:
-	rebar compile
+	./rebar compile
 
 doc:
-	rebar skip_deps=true doc
+	./rebar skip_deps=true doc
 
 clean:
-	rebar clean
+	./rebar clean
 
 distclean: clean
-	rebar delete-deps
+	./rebar delete-deps
 
 update:
-	rebar update-deps
+	./rebar update-deps
 
 start: all
 	deps/yaws/bin/yaws -i -c yaws.conf
